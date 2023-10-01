@@ -1,0 +1,15 @@
+version: "3.8"
+
+services: 
+  postgres:
+    container_name: nest-clean-pg
+    image: postgres # this is a image
+    ports: 
+      - 5432:5432 # port that localhost will listen
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: nest-clean
+      PGDATA: /data/postgres # folder that will be save informations of database
+    volumes:
+      - ./data/pg:/data/postgres
