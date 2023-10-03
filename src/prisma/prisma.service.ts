@@ -7,7 +7,7 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   // with extends not is need created instance
-  public client: PrismaClient
+  // public client: PrismaClient
 
   constructor() {
     // this.client = new PrismaClient() // created instance of PrismaClient for have access the database
