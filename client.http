@@ -13,8 +13,7 @@ Content-Type: application/json
 ###
 
 # @name authenticate
-
-POST {{baseUrl}}/sesisons
+POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
