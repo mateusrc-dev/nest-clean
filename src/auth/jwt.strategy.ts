@@ -5,11 +5,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { Env } from 'src/env'
 import { z } from 'zod'
 
-const tokenSchema = z.object({
+const tokenPayloadSchema = z.object({
   sub: z.string().uuid(), // sub - inside of token have the id of user
 })
 
-type TokenSchema = z.infer<typeof tokenSchema>
+export type TokenPayload = z.infer<typeof tokenPayloadSchema>
 
 @Injectable() // all class that is a provider in nestjs need has injectable
 export class jwtStrategy extends PassportStrategy(Strategy) {
@@ -24,8 +24,8 @@ export class jwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: TokenSchema) {
+  async validate(payload: TokenPayload) {
     // this method will validate if the token has the necessary information for our application to start
-    return tokenSchema.parse(payload) // doing validation...
+    return tokenPayloadSchema.parse(payload) // doing validation...
   }
 }
