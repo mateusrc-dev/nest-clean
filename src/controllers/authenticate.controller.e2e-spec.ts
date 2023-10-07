@@ -2,9 +2,10 @@ import { AppModule } from '@/app.module'
 import { PrismaService } from '@/prisma/prisma.service'
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { hash } from 'bcryptjs'
 import request from 'supertest' // lib supertest will be used to make http requests
 
-describe('Create account(E2E)', () => {
+describe('Authenticate (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
 
@@ -19,22 +20,22 @@ describe('Create account(E2E)', () => {
     await app.init()
   })
 
-  test('[POST] /accounts', async () => {
-    const response = await request(app.getHttpServer()).post('/accounts').send({
+  test('[POST] /sessions', async () => {
+    await prisma.user.create({
+      data: {
+        name: 'Mateus Raimundo',
+        email: 'mateus@email.com',
+        password: await hash('123456', 8),
+      },
+    })
+
+    const response = await request(app.getHttpServer()).post('/sessions').send({
       // we let's use supertest to do request in route accounts
-      name: 'Mateus Raimundo',
       email: 'mateus@email.com',
       password: '123456',
     })
 
     expect(response.statusCode).toBe(201)
-
-    const userOnDatabase = await prisma.user.findUnique({
-      where: {
-        email: 'mateus@email.com',
-      },
-    })
-
-    expect(userOnDatabase).toBeTruthy() // we let's verify if the user is create in database
+    expect(response.body).toEqual({ access_token: expect.any(String) }) // we let's verify if the user is create in database
   })
 })
