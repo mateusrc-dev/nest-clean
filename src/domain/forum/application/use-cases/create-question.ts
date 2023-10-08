@@ -4,6 +4,7 @@ import { QuestionsRepository } from '../repositories/question-repository'
 import { Either, right } from '@/core/either'
 import { QuestionAttachment } from '../../enterprise/entities/question-attachment'
 import { QuestionAttachmentList } from '../../enterprise/entities/question-attachment-list'
+import { Injectable } from '@nestjs/common'
 
 interface CreateQuestionUseCaseRequest {
   // interface helps to identify what we are going to receive in this class as a parameter
@@ -15,6 +16,7 @@ interface CreateQuestionUseCaseRequest {
 
 type CreateQuestionUseCaseResponse = Either<null, { question: Question }>
 
+@Injectable() // use case will be injected into the controller
 export class CreateQuestionUseCase {
   // this class will have only one method - principle of SOLID
   constructor(private questionRepository: QuestionsRepository) {}

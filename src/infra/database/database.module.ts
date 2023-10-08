@@ -6,11 +6,16 @@ import { PrismaQuestionAttachmentRepository } from './prisma/repositories/prisma
 import { PrismaAnswersRepository } from './prisma/repositories/prisma-answer-repository'
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comments-repository'
 import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-answer-attachments-repository'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
 
 @Module({
   providers: [
     PrismaService,
-    PrismaQuestionsRepository,
+    {
+      // when nestjs finds a file that has a dependency on 'QuestionRepository' the class 'PrismaQuestionsRepository' will be used
+      provide: QuestionsRepository,
+      useClass: PrismaQuestionsRepository,
+    },
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentRepository,
     PrismaAnswersRepository,
@@ -19,7 +24,7 @@ import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-
   ], // all module that import the DatabaseModule will can injected this repositories
   exports: [
     PrismaService,
-    PrismaQuestionsRepository,
+    QuestionsRepository,
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentRepository,
     PrismaAnswersRepository,
