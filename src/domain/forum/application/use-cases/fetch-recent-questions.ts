@@ -1,6 +1,7 @@
 import { Either, right } from '@/core/either'
 import { Question } from '../../enterprise/entities/question'
 import { QuestionsRepository } from '../repositories/question-repository'
+import { Injectable } from '@nestjs/common'
 
 interface FetchRecentQuestionsUseCaseRequest {
   // interface helps to identify what we are going to receive in this class as a parameter
@@ -14,6 +15,7 @@ type FetchRecentQuestionsUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class FetchRecentQuestionsUseCase {
   // this class will have only one method - principle of SOLID
   constructor(private questionRepository: QuestionsRepository) {}

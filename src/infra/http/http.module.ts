@@ -5,6 +5,7 @@ import { AuthenticateController } from './controllers/authenticate.controller'
 import { CreateQuestionController } from './controllers/create-question.controller'
 import { DatabaseModule } from '../database/database.module'
 import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question'
+import { FetchRecentQuestionsUseCase } from '@/domain/forum/application/use-cases/fetch-recent-questions'
 
 @Module({
   imports: [DatabaseModule], // prisma is not a global service, so it has to be inserted here
@@ -14,6 +15,6 @@ import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/crea
     CreateQuestionController,
     FetchRecentQuestionsController,
   ],
-  providers: [CreateQuestionUseCase], // question controller need this dependence
+  providers: [CreateQuestionUseCase, FetchRecentQuestionsUseCase], // question controller need this dependence
 })
 export class HttpModule {}
