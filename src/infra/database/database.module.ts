@@ -7,6 +7,8 @@ import { PrismaAnswersRepository } from './prisma/repositories/prisma-answer-rep
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comments-repository'
 import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-answer-attachments-repository'
 import { QuestionsRepository } from '@/domain/forum/application/repositories/question-repository'
+import { PrismaStudentsRepository } from './prisma/repositories/prisma-students-repository'
+import { StudentsRepository } from '@/domain/forum/application/repositories/students-repository'
 
 @Module({
   providers: [
@@ -15,6 +17,11 @@ import { QuestionsRepository } from '@/domain/forum/application/repositories/que
       // when nestjs finds a file that has a dependency on 'QuestionRepository' the class 'PrismaQuestionsRepository' will be used
       provide: QuestionsRepository,
       useClass: PrismaQuestionsRepository,
+    },
+    {
+      // when nestjs finds a file that has a dependency on 'QuestionRepository' the class 'PrismaQuestionsRepository' will be used
+      provide: StudentsRepository,
+      useClass: PrismaStudentsRepository,
     },
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentRepository,
@@ -25,6 +32,7 @@ import { QuestionsRepository } from '@/domain/forum/application/repositories/que
   exports: [
     PrismaService,
     QuestionsRepository,
+    StudentsRepository,
     PrismaQuestionCommentsRepository,
     PrismaQuestionAttachmentRepository,
     PrismaAnswersRepository,
