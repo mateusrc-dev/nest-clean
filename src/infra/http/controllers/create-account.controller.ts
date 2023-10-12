@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Post,
-  ConflictException,
-  UsePipes,
-} from '@nestjs/common'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { hash } from 'bcryptjs'
+import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student'
 
 const createAccountBodySchema = z.object({
   // here we let's create the schema for create the validation
@@ -22,7 +14,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema> // we can
 
 @Controller('/accounts')
 export class CreateAccountController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private registerStudent: RegisterStudentUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -30,26 +22,14 @@ export class CreateAccountController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body
 
-    const userWithSameEmail = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
+    const result = await this.registerStudent.execute({
+      name,
+      email,
+      password,
     })
 
-    if (userWithSameEmail) {
-      throw new ConflictException(
-        'User with same e-mail address already exist.',
-      )
+    if (result.isLeft()) {
+      throw new Error()
     }
-
-    const hashPassword = await hash(password, 8) // '8' is the number of rounds for create hash (how repeat creation of hash 8 times)
-
-    await this.prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashPassword,
-      },
-    })
   }
 }
