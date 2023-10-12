@@ -1,7 +1,16 @@
-import { Body, Controller, Post, HttpCode, UsePipes } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  UsePipes,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { z } from 'zod'
 import { AuthenticateStudentUseCase } from '@/domain/forum/application/use-cases/authenticate-student'
+import { WrongCredentialsError } from '@/domain/forum/application/use-cases/errors/wrong-credentials-error'
 
 const authenticateBodySchema = z.object({
   // here we let's create the schema for create the validation
@@ -27,7 +36,15 @@ export class AuthenticateController {
     })
 
     if (result.isLeft()) {
-      throw new Error()
+      const error = result.value // let's store the error that occurred in variable
+
+      switch (error.constructor) {
+        // constructor returns the class that generated this error
+        case WrongCredentialsError:
+          throw new UnauthorizedException(error.message) // error coming from nestjs will trigger error with status code
+        default:
+          throw new BadRequestException(error.message) // generic error
+      }
     }
 
     const { accessToken } = result.value

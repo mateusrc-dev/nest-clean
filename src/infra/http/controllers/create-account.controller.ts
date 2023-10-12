@@ -1,7 +1,16 @@
-import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  UsePipes,
+  ConflictException,
+  BadRequestException,
+} from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { RegisterStudentUseCase } from '@/domain/forum/application/use-cases/register-student'
+import { StudentAlreadyExistsError } from '@/domain/forum/application/use-cases/errors/student-already-exists-error'
 
 const createAccountBodySchema = z.object({
   // here we let's create the schema for create the validation
@@ -29,7 +38,15 @@ export class CreateAccountController {
     })
 
     if (result.isLeft()) {
-      throw new Error()
+      const error = result.value // let's store the error that occurred in variable
+
+      switch (error.constructor) {
+        // constructor returns the class that generated this error
+        case StudentAlreadyExistsError:
+          throw new ConflictException(error.message) // error coming from nestjs will trigger error with status code
+        default:
+          throw new BadRequestException(error.message) // generic error
+      }
     }
   }
 }
