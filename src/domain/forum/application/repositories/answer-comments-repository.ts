@@ -1,13 +1,14 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { AnswerComment } from '../../enterprise/entities/answer-comment'
 
-export interface AnswerCommentsRepository {
+export abstract class AnswerCommentsRepository {
   // this is repository is only a contract
-  findById(id: string): Promise<AnswerComment | null>
-  findManyByAnswerId(
+  abstract findById(id: string): Promise<AnswerComment | null>
+  abstract findManyByAnswerId(
     answerId: string,
     params: PaginationParams,
   ): Promise<AnswerComment[]>
-  create(answerComment: AnswerComment): Promise<void>
-  delete(answerComment: AnswerComment): Promise<void>
+
+  abstract create(answerComment: AnswerComment): Promise<void>
+  abstract delete(answerComment: AnswerComment): Promise<void>
 }
