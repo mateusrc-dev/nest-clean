@@ -4,6 +4,7 @@ import { AnswerCommentsRepository } from '../repositories/answer-comments-reposi
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { Either, left, right } from '@/core/either'
+import { Injectable } from '@nestjs/common'
 
 interface CommentOnAnswerUseCaseRequest {
   // interface helps to identify what we are going to receive in this class as a parameter
@@ -19,6 +20,7 @@ type CommentOnAnswerUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class CommentOnAnswerUseCase {
   // this class will have only one method - principle of SOLID
   constructor(
