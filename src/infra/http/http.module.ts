@@ -38,9 +38,11 @@ import { FetchQuestionCommentsController } from './controllers/fetch-question-co
 import { FetchAnswerCommentsController } from './controllers/fetch-answer-comments.controller'
 import { FetchAnswerCommentsUseCase } from '@/domain/forum/application/use-cases/fetch-answer-comments'
 import { UploadAttachmentController } from './controllers/upload-attachment.controller'
+import { StorageModule } from '../storage/storage.module'
+import { UploadAndCreateAttachmentUseCase } from '@/domain/forum/application/use-cases/upload-and-create-attachment'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule], // prisma is not a global service, so it has to be inserted here
+  imports: [DatabaseModule, CryptographyModule, StorageModule], // prisma is not a global service, so it has to be inserted here
   controllers: [
     CreateAccountController,
     AuthenticateController,
@@ -81,6 +83,7 @@ import { UploadAttachmentController } from './controllers/upload-attachment.cont
     DeleteAnswerCommentUseCase,
     FetchQuestionCommentsUseCase,
     FetchAnswerCommentsUseCase,
+    UploadAndCreateAttachmentUseCase,
   ], // question controller need this dependence
 })
 export class HttpModule {}
