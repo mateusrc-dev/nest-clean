@@ -19,7 +19,7 @@ export class awsStorage implements Uploader {
     })
   }
 
-  async upload({ fileName, fileType, body }): Promise<{ link: string }> {
+  async upload({ fileName, fileType, body }): Promise<{ url: string }> {
     const uploadId = randomUUID()
 
     const uniqueFileName = `${uploadId}-${fileName}`
@@ -34,6 +34,6 @@ export class awsStorage implements Uploader {
     )
 
     // in database let's saves the reference of file
-    return { link: uniqueFileName }
+    return { url: uniqueFileName }
   }
 }

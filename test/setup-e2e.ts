@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client' // for have access the database
 import { randomUUID } from 'node:crypto'
-import 'dotenv/config' // for have access the environment variable
+import { config } from 'dotenv' // for have access the environment variable
 import { execSync } from 'node:child_process'
+
+config({ path: '.env', override: true }) // config loading the environment variable and we can put configs
+// 'override' tells nest to override the variable when this variable has been defined in the past
+config({ path: '.env.test', override: true })
 
 const prisma = new PrismaClient()
 

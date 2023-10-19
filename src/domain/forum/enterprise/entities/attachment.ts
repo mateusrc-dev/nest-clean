@@ -3,7 +3,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 interface AttachmentProps {
   title: string
-  link: string
+  url: string
   // parentId: string
   // parentType: 'answer' | 'question' // polymorphism - class behaves like two - we will not use this form
 }
@@ -13,8 +13,8 @@ export class Attachment extends Entity<AttachmentProps> {
     return this.props.title
   }
 
-  get link() {
-    return this.props.link
+  get url() {
+    return this.props.url
   }
 
   static create(props: AttachmentProps, id?: UniqueEntityID) {
