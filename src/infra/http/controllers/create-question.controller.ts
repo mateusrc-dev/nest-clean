@@ -9,6 +9,7 @@ const createQuestionBodySchema = z.object({
   // here we let's create the schema for create the validation
   title: z.string(),
   content: z.string(),
+  attachments: z.array(z.string().uuid()),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(createQuestionBodySchema)
@@ -25,14 +26,14 @@ export class CreateQuestionController {
     body: CreateQuestionBodySchema, // doing the validate of request body
     @CurrentUser() user: TokenPayload, // get the user logged
   ) {
-    const { title, content } = body
+    const { title, content, attachments } = body
     const { sub: userId } = user
 
     const result = await this.createQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
     })
 
     if (result.isLeft()) {
