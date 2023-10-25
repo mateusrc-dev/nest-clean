@@ -16,6 +16,7 @@ const editQuestionBodySchema = z.object({
   // here we let's create the schema for create the validation
   title: z.string(),
   content: z.string(),
+  attachments: z.array(z.string().uuid()),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(editQuestionBodySchema)
@@ -34,14 +35,14 @@ export class EditQuestionController {
     @CurrentUser() user: TokenPayload, // get the user logged
     @Param('id') questionId: string,
   ) {
-    const { title, content } = body
+    const { title, content, attachments } = body
     const { sub: userId } = user
 
     const result = await this.editQuestion.execute({
       title,
       content,
       authorId: userId,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
       questionId,
     })
 
