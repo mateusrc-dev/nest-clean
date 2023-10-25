@@ -15,6 +15,7 @@ import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit-ans
 const editAnswerBodySchema = z.object({
   // here we let's create the schema for create the validation
   content: z.string(),
+  attachments: z.array(z.string().uuid()).default([]),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(editAnswerBodySchema)
@@ -33,14 +34,14 @@ export class EditAnswerController {
     @CurrentUser() user: TokenPayload, // get the user logged
     @Param('id') answerId: string,
   ) {
-    const { content } = body
+    const { content, attachments } = body
     const { sub: userId } = user
 
     const result = await this.editAnswer.execute({
       content,
       answerId,
       authorId: userId,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
     })
 
     if (result.isLeft()) {

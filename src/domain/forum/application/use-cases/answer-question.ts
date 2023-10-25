@@ -5,6 +5,7 @@ import { Either, right } from '@/core/either'
 import { AnswerAttachment } from '../../enterprise/entities/answer-attachment'
 import { AnswerAttachmentList } from '../../enterprise/entities/answer-attachment-list'
 import { Injectable } from '@nestjs/common'
+import { AnswerAttachmentsRepository } from '../repositories/answer-attachments-repository'
 
 interface AnswerQuestionUseCaseRequest {
   // interface helps to identify what we are going to receive in this class as a parameter
@@ -24,7 +25,11 @@ type AnswerQuestionUseCaseResponse = Either<
 @Injectable()
 export class AnswerQuestionUseCase {
   // this class will have only one method - principle of SOLID
-  constructor(private answersRepository: AnswersRepository) {}
+  constructor(
+    private answersRepository: AnswersRepository,
+    private answerAttachmentRepository: AnswerAttachmentsRepository,
+  ) {}
+
   async execute({
     authorId,
     questionId,
@@ -48,6 +53,9 @@ export class AnswerQuestionUseCase {
     })
 
     answer.attachments = new AnswerAttachmentList(QuestionAttachments)
+    await this.answerAttachmentRepository.createMany(
+      answer.attachments.currentItems,
+    )
 
     return right({ answer })
   }

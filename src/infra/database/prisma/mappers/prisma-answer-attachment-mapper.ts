@@ -1,7 +1,7 @@
 // mappers - transforms an entity in the format of one layer to the format of another layer
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { AnswerAttachment } from '@/domain/forum/enterprise/entities/answer-attachment'
-import { Attachment as PrismaAttachment } from '@prisma/client'
+import { Prisma, Attachment as PrismaAttachment } from '@prisma/client'
 
 export class PrismaAnswerAttachmentMapper {
   // static - don't will be need create instance of class for use the method
@@ -18,6 +18,25 @@ export class PrismaAnswerAttachmentMapper {
       },
       new UniqueEntityID(raw.id),
     ) // let's create a reference to answerattachment already exist in database
+  }
+
+  static toPrismaUpdateMany(
+    attachments: AnswerAttachment[],
+  ): Prisma.AttachmentUpdateManyArgs {
+    const attachmentsIds = attachments.map((attachment) => {
+      return attachment.attachmentId.toString()
+    })
+
+    return {
+      where: {
+        id: {
+          in: attachmentsIds,
+        },
+      },
+      data: {
+        answerId: attachments[0].answerId.toString(),
+      },
+    }
   }
 }
 
