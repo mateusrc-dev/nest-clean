@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
 import { PrismaQuestionMapper } from '../mappers/prisma-question-mapper'
 import { QuestionAttachmentsRepository } from '@/domain/forum/application/repositories/question-attachments-repository'
+import { QuestionDetails } from '@/domain/forum/enterprise/entities/value-objects/question-details'
+import { PrismaQuestionDetailsMapper } from '../mappers/prisma-question-details-mapper'
 
 // everything that will be sent in dependency inversion in nestjs is necessary to use injectable
 @Injectable() // this prisma repository will be used in dependency injection - will be injected into use cases
@@ -42,6 +44,25 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     }
 
     return PrismaQuestionMapper.toDomain(question)
+  }
+
+  async findDetailsBySlug(slug: string): Promise<QuestionDetails | null> {
+    const question = await this.prisma.question.findUnique({
+      // prisma question does not have the same fields as the Question entity
+      where: {
+        slug,
+      },
+      include: {
+        author: true,
+        attachments: true,
+      },
+    })
+
+    if (!question) {
+      return null
+    }
+
+    return PrismaQuestionDetailsMapper.toDomain(question)
   }
 
   async findManyRecent({ page }: PaginationParams): Promise<Question[]> {
