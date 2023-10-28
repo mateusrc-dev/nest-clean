@@ -4,6 +4,7 @@ import { envSchema } from './env/env'
 import { AuthModule } from './auth/auth.module'
 import { HttpModule } from './http/http.module'
 import { EnvModule } from './env/env.module'
+import { EventsModule } from './events/events.module'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { EnvModule } from './env/env.module'
     AuthModule,
     HttpModule,
     EnvModule, // this module will be visible throughout the application
+    EventsModule,
   ], // this is a module and don't provider - we let's use 'forRoot' because this is a module of configuration
 })
 export class AppModule {}
