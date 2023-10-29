@@ -1,13 +1,14 @@
-import { Env } from '@/infra/env/env'
-import { OnModuleDestroy } from '@nestjs/common'
+import { EnvService } from '@/infra/env/env.service'
+import { Injectable, OnModuleDestroy } from '@nestjs/common'
 import { Redis } from 'ioredis'
 
+@Injectable()
 export class RedisService extends Redis implements OnModuleDestroy {
-  constructor(envService: Env) {
+  constructor(envService: EnvService) {
     super({
-      host: envService.REDIS_HOST,
-      port: envService.REDIS_PORT,
-      db: envService.REDIS_DB,
+      host: envService.get('REDIS_HOST'),
+      port: Number(envService.get('REDIS_PORT')),
+      db: Number(envService.get('REDIS_DB')),
     })
   }
 
